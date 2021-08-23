@@ -1,0 +1,43 @@
+<job>
+<script language="VBScript" src="VBS-MS-Office-App-Creator\create-MS-Office-app.vbs" />
+<script language="VBScript">
+
+   option explicit
+
+   dim app
+   dim xls
+   set xls = createOfficeApp("excel", currentDir() & "tq84-test.xlsm")
+   if xls is nothing then ' {
+      wscript.echo("Could not create excel worksheet.")
+      wscript.quit(-1)
+   end if ' }
+
+   set app = xls.application
+
+   importVBAFile app, currentDir() & "src\stdArray.cls"
+   importVBAFile app, currentDir() & "src\stdCallback.cls"
+   importVBAFile app, currentDir() & "src\stdClipboard.cls"
+   importVBAFile app, currentDir() & "src\stdEnumerator.cls"
+   importVBAFile app, currentDir() & "src\stdLambda.cls"
+   importVBAFile app, currentDir() & "src\stdRegex.cls"
+
+   importVBAFile app, currentDir() & "src\stdICallable.cls"
+
+
+'  importVBAFile app, currentDir() & "tests\lib\Test.cls"
+   insertModule  app, currentDir() & "simpleExample.vb", "simpleExcample", 1
+
+   compileApp app
+
+   app.run "main"
+
+   xls.save
+
+   wscript.echo("The end")
+
+ '
+ ' Bring created Excel Workbook to the front:
+ '
+   createObject("WScript.Shell").appActivate(app.caption)
+
+</script> </job>
